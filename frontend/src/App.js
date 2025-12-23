@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import Antigravity from "./Antigravity";
+import Hyperspeed from "./Hyperspeed";
+import "./Hyperspeed.css";
+import RotatingText from "./RotatingText";
 
 function App() {
   // --- ESTADOS ---
@@ -150,6 +154,13 @@ function App() {
     cargarMetricas(); // Carga las métricas
   };
 
+  const inputStyle = {
+    padding: "10px",
+    borderRadius: "5px",
+    border: "1px solid #ccc",
+    outline: "none",
+  };
+
   useEffect(() => {
     if (user && user.rol === "cliente") {
       cargarMisPedidos();
@@ -160,92 +171,164 @@ function App() {
   if (!user) {
     return (
       <div
-        style={{ padding: "50px", textAlign: "center", fontFamily: "Arial" }}
+        style={{
+          position: "relative",
+          width: "100vw",
+          height: "100vh",
+          overflow: "hidden",
+          backgroundColor: "#000", // Fondo oscuro para que resalte el color #FF9FFC
+        }}
       >
-        <h1>Flash Delivery</h1>
-        <h2>{isRegister ? "Crear Cuenta" : "Iniciar Sesión"}</h2>
-
+        {/* CAPA DE FONDO: Antigravity */}
         <div
           style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "10px",
-            maxWidth: "300px",
-            margin: "0 auto",
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            zIndex: 1,
           }}
         >
-          {isRegister && (
-            <>
-              <input
-                type="text"
-                placeholder="Nombre Completo"
-                onChange={(e) =>
-                  setFormData({ ...formData, nombre: e.target.value })
-                }
-              />
+          <Antigravity
+            count={300}
+            magnetRadius={6}
+            ringRadius={7}
+            waveSpeed={0.4}
+            waveAmplitude={1}
+            particleSize={1.5}
+            lerpSpeed={0.05}
+            color={"#FF9FFC"}
+            autoAnimate={true}
+            particleVariance={1}
+          />
+        </div>
 
-              <select
-                onChange={(e) =>
-                  setFormData({ ...formData, rol: e.target.value })
-                }
-              >
-                <option value="Cliente">Soy Cliente</option>
-                <option value="Repartidor">Soy Repartidor</option>
-              </select>
+        {/* CAPA DE CONTENIDO: Formulario */}
+        <div
+          style={{
+            position: "relative",
+            zIndex: 2,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100%",
+            fontFamily: "Arial",
+          }}
+        >
+          {/* Contenedor con fondo semi-transparente para legibilidad */}
+          <div
+            style={{
+              backgroundColor: "rgba(255, 255, 255, 0.9)",
+              padding: "40px",
+              borderRadius: "15px",
+              boxShadow: "0 8px 32px rgba(0,0,0,0.3)",
+              width: "100%",
+              maxWidth: "350px",
+              textAlign: "center",
+            }}
+          >
+            <h1 style={{ margin: "0 0 10px 0", color: "#333" }}>
+              Flash Delivery
+            </h1>
+            <h2
+              style={{
+                fontSize: "1.2rem",
+                color: "#666",
+                marginBottom: "20px",
+              }}
+            >
+              {isRegister ? "Crear Cuenta" : "Iniciar Sesión"}
+            </h2>
 
-              {formData.rol === "Repartidor" && (
+            <div
+              style={{ display: "flex", flexDirection: "column", gap: "12px" }}
+            >
+              {isRegister && (
                 <input
                   type="text"
-                  placeholder="Tipo de Vehículo (Moto/Carro)"
+                  placeholder="Nombre Completo"
+                  style={inputStyle}
+                  onChange={(e) =>
+                    setFormData({ ...formData, nombre: e.target.value })
+                  }
+                />
+              )}
+
+              {isRegister && (
+                <select
+                  style={inputStyle}
+                  onChange={(e) =>
+                    setFormData({ ...formData, rol: e.target.value })
+                  }
+                >
+                  <option value="Cliente">Soy Cliente</option>
+                  <option value="Repartidor">Soy Repartidor</option>
+                </select>
+              )}
+
+              {isRegister && formData.rol === "Repartidor" && (
+                <input
+                  type="text"
+                  placeholder="Vehículo (Moto/Carro)"
+                  style={inputStyle}
                   onChange={(e) =>
                     setFormData({ ...formData, vehiculo: e.target.value })
                   }
                 />
               )}
-            </>
-          )}
 
-          <input
-            type="email"
-            placeholder="Correo Electrónico"
-            onChange={(e) =>
-              setFormData({ ...formData, email: e.target.value })
-            }
-          />
+              <input
+                type="email"
+                placeholder="Correo Electrónico"
+                style={inputStyle}
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
+              />
 
-          <input
-            type="password"
-            placeholder="Contraseña"
-            onChange={(e) =>
-              setFormData({ ...formData, password: e.target.value })
-            }
-          />
+              <input
+                type="password"
+                placeholder="Contraseña"
+                style={inputStyle}
+                onChange={(e) =>
+                  setFormData({ ...formData, password: e.target.value })
+                }
+              />
 
-          <button
-            onClick={handleAuth}
-            style={{
-              padding: "10px",
-              backgroundColor: "#007bff",
-              color: "white",
-              border: "none",
-              cursor: "pointer",
-            }}
-          >
-            {isRegister ? "Registrarse" : "Ingresar"}
-          </button>
+              <button
+                onClick={handleAuth}
+                style={{
+                  padding: "12px",
+                  backgroundColor: "#007bff",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "5px",
+                  cursor: "pointer",
+                  fontWeight: "bold",
+                  marginTop: "10px",
+                }}
+              >
+                {isRegister ? "Registrarse" : "Ingresar"}
+              </button>
 
-          <p
-            onClick={() => setIsRegister(!isRegister)}
-            style={{
-              color: "blue",
-              cursor: "pointer",
-              textDecoration: "underline",
-            }}
-          >
-            {isRegister
-              ? "¿Ya tienes cuenta? Inicia sesión"
-              : "¿No tienes cuenta? Regístrate gratis"}
-          </p>
+              <p
+                onClick={() => setIsRegister(!isRegister)}
+                style={{
+                  color: "#007bff",
+                  cursor: "pointer",
+                  textDecoration: "underline",
+                  fontSize: "0.9rem",
+                  marginTop: "10px",
+                }}
+              >
+                {isRegister
+                  ? "¿Ya tienes cuenta? Inicia sesión"
+                  : "¿No tienes cuenta? Regístrate gratis"}
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -253,220 +336,355 @@ function App() {
 
   // --- VISTA DESPUÉS DEL LOGIN (SEGÚN ROL) ---
   return (
-    <div style={{ padding: "20px" }}>
-      <header
+    <div
+      style={{
+        position: "relative",
+        width: "100vw",
+        minHeight: "100vh",
+        overflowX: "hidden",
+        backgroundColor: "#000",
+      }}
+    >
+      {/* CAPA DE FONDO: Hyperspeed para ambas vistas */}
+      <div
         style={{
-          display: "flex",
-          justifyContent: "space-between",
-          borderBottom: "1px solid #ccc",
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          zIndex: 0,
         }}
       >
-        <h2>Flash Delivery</h2>
-        <p>
-          Usuario: <b>{user.nombre}</b> | Rol: <b>{user.rol}</b>
-        </p>
-        <button onClick={() => setUser(null)}>Cerrar Sesión</button>
-      </header>
+        <Hyperspeed />
+      </div>
 
-      <main>
-        {user.rol === "cliente" ? (
-          <div
+      {/* CAPA DE CONTENIDO: Header y Main */}
+      <div
+        style={{
+          position: "relative",
+          zIndex: 1,
+          padding: "20px",
+          color: "#333",
+        }}
+      >
+        {/* HEADER: Con fondo para resaltar sobre el fondo animado */}
+        <header
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            padding: "15px 20px",
+            backgroundColor: "rgba(255, 255, 255, 0.9)",
+            borderRadius: "12px",
+            marginBottom: "20px",
+            boxShadow: "0 4px 15px rgba(0,0,0,0.3)",
+            alignItems: "center",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <h2 style={{ margin: 0, color: "#007bff", fontSize: "1.5rem" }}>
+              Flash
+            </h2>
+            <RotatingText
+              texts={["Delivery", "Rápido", "Seguro", "Ya!"]}
+              mainClassName="px-2 bg-cyan-300 text-black overflow-hidden py-1 justify-center rounded-lg font-bold"
+              staggerFrom={"last"}
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "-120%" }}
+              staggerDuration={0.025}
+              splitLevelClassName="overflow-hidden"
+              transition={{ type: "spring", damping: 30, stiffness: 400 }}
+              rotationInterval={2000}
+            />
+          </div>
+          <p style={{ margin: 0 }}>
+            Usuario: <b>{user.nombre}</b> | Rol: <b>{user.rol}</b>
+          </p>
+          <button
+            onClick={() => setUser(null)}
             style={{
-              marginTop: "20px",
-              border: "1px solid #ddd",
-              padding: "15px",
+              padding: "8px 15px",
+              cursor: "pointer",
+              borderRadius: "8px",
+              border: "1px solid #ccc",
             }}
           >
-            <h3>Solicitar Nuevo Envío (Épica B)</h3>
-            <input
-              placeholder="Punto de Origen"
-              value={datosEnvio.origen}
-              onChange={(e) =>
-                setDatosEnvio({ ...datosEnvio, origen: e.target.value })
-              }
-            />
-            <br />
-            <input
-              placeholder="Punto de Destino"
-              value={datosEnvio.destino}
-              onChange={(e) =>
-                setDatosEnvio({ ...datosEnvio, destino: e.target.value })
-              }
-            />
-            <br />
-            <input
-              type="number"
-              placeholder="Distancia en KM"
-              value={datosEnvio.km}
-              onChange={(e) =>
-                setDatosEnvio({ ...datosEnvio, km: e.target.value })
-              }
-            />
-            <br />
+            Cerrar Sesión
+          </button>
+        </header>
 
-            <div
-              style={{ margin: "10px 0", fontWeight: "bold", color: "green" }}
-            >
-              Tarifa calculada: Q{datosEnvio.km * 5}{" "}
-              {/* Cálculo automático en tiempo real  */}
-            </div>
-
-            <button
-              onClick={enviarSolicitud}
-              style={{ backgroundColor: "#28a745", color: "white" }}
-            >
-              Solicitar Envío
-            </button>
-
-            <h3>Mis Pedidos Recientes</h3>
-            <button onClick={cargarMisPedidos}>Actualizar Mis Pedidos</button>
-
-            <div style={{ marginTop: "10px" }}>
-              {misPedidos.map((p) => (
-                <div
-                  key={p.id}
-                  style={{
-                    border: "1px solid #eee",
-                    padding: "10px",
-                    marginBottom: "5px",
-                  }}
-                >
-                  <p>
-                    Destino: {p.destino} | <strong>Estado: {p.estado}</strong>
-                  </p>
-
-                  {/* LÓGICA DE CALIFICACIÓN: Solo si está ENTREGADO y no tiene calificación aún */}
-                  {p.estado === "Entregado" && !p.calificacion ? (
-                    <div
-                      style={{
-                        backgroundColor: "#f9f9f9",
-                        padding: "10px",
-                        borderRadius: "5px",
-                      }}
-                    >
-                      <p style={{ margin: "0 0 5px 0" }}>
-                        ¿Cómo fue tu servicio?
-                      </p>
-                      {[1, 2, 3, 4, 5].map((num) => (
-                        <button
-                          key={num}
-                          onClick={() => calificarPedido(p.id, num)}
-                          style={{ marginRight: "5px", cursor: "pointer" }}
-                        >
-                          {num} ⭐
-                        </button>
-                      ))}
-                    </div>
-                  ) : p.calificacion ? (
-                    <p style={{ color: "gold", fontWeight: "bold" }}>
-                      Tu calificación: {p.calificacion} ⭐
-                    </p>
-                  ) : null}
-                </div>
-              ))}
-            </div>
-          </div>
-        ) : (
-          <div style={{ marginTop: "20px" }}>
-            {/* --- SECCIÓN 1: MIS ENTREGAS ACTIVAS (Épica D) --- */}
+        <main style={{ maxWidth: "900px", margin: "0 auto" }}>
+          {user.rol === "cliente" ? (
+            /* --- VISTA CLIENTE --- */
             <div
               style={{
-                backgroundColor: "#e9f7ef",
-                padding: "15px",
-                borderRadius: "8px",
-                marginBottom: "20px",
+                backgroundColor: "rgba(255, 255, 255, 0.95)",
+                padding: "25px",
+                borderRadius: "15px",
+                boxShadow: "0 8px 32px rgba(0,0,0,0.2)",
               }}
             >
-              <h3>📦 Mis Entregas en Progreso</h3>
-              {pedidosActivos.length === 0 ? (
-                <p>No tienes entregas activas.</p>
-              ) : (
-                pedidosActivos.map((p) => (
+              <h3 style={{ color: "#007bff" }}>Solicitar Nuevo Envío</h3>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "10px",
+                  maxWidth: "400px",
+                }}
+              >
+                <input
+                  placeholder="Punto de Origen"
+                  value={datosEnvio.origen}
+                  style={inputStyle}
+                  onChange={(e) =>
+                    setDatosEnvio({ ...datosEnvio, origen: e.target.value })
+                  }
+                />
+                <input
+                  placeholder="Punto de Destino"
+                  value={datosEnvio.destino}
+                  style={inputStyle}
+                  onChange={(e) =>
+                    setDatosEnvio({ ...datosEnvio, destino: e.target.value })
+                  }
+                />
+                <input
+                  type="number"
+                  placeholder="Distancia en KM"
+                  value={datosEnvio.km}
+                  style={inputStyle}
+                  onChange={(e) =>
+                    setDatosEnvio({ ...datosEnvio, km: e.target.value })
+                  }
+                />
+
+                <div
+                  style={{
+                    margin: "10px 0",
+                    fontWeight: "bold",
+                    color: "#28a745",
+                    fontSize: "1.2rem",
+                  }}
+                >
+                  Tarifa calculada: Q{datosEnvio.km * 5}
+                </div>
+
+                <button
+                  onClick={enviarSolicitud}
+                  style={{
+                    padding: "12px",
+                    backgroundColor: "#28a745",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "8px",
+                    cursor: "pointer",
+                    fontWeight: "bold",
+                  }}
+                >
+                  🚀 Solicitar Envío Flash
+                </button>
+              </div>
+
+              <hr
+                style={{
+                  margin: "30px 0",
+                  border: "0",
+                  borderTop: "1px solid #eee",
+                }}
+              />
+
+              <h3>Mis Pedidos Recientes</h3>
+              <button
+                onClick={cargarMisPedidos}
+                style={{ marginBottom: "15px" }}
+              >
+                🔄 Actualizar
+              </button>
+
+              <div style={{ display: "grid", gap: "10px" }}>
+                {misPedidos.map((p) => (
                   <div
                     key={p.id}
                     style={{
-                      border: "1px solid #28a745",
-                      padding: "10px",
-                      margin: "5px 0",
-                      background: "white",
+                      border: "1px solid #ddd",
+                      padding: "15px",
+                      borderRadius: "10px",
+                      backgroundColor: "#fff",
                     }}
                   >
-                    <p>
-                      <b>Ruta:</b> {p.origen} ➔ {p.destino}
+                    <p style={{ margin: "0 0 10px 0" }}>
+                      Destino: <b>{p.destino}</b> | Estado:{" "}
+                      <span
+                        style={{
+                          color: p.estado === "Entregado" ? "green" : "orange",
+                        }}
+                      >
+                        {p.estado}
+                      </span>
                     </p>
-                    <button
-                      onClick={() => finalizarEnvio(p.id)}
+                    {p.estado === "Entregado" && !p.calificacion ? (
+                      <div
+                        style={{
+                          backgroundColor: "#f0f7ff",
+                          padding: "10px",
+                          borderRadius: "8px",
+                        }}
+                      >
+                        <p style={{ margin: "0 0 5px 0", fontSize: "0.9rem" }}>
+                          ¿Cómo fue tu servicio?
+                        </p>
+                        {[1, 2, 3, 4, 5].map((num) => (
+                          <button
+                            key={num}
+                            onClick={() => calificarPedido(p.id, num)}
+                            style={{
+                              marginRight: "8px",
+                              cursor: "pointer",
+                              border: "1px solid #007bff",
+                              borderRadius: "5px",
+                              background: "white",
+                            }}
+                          >
+                            {num} ⭐
+                          </button>
+                        ))}
+                      </div>
+                    ) : p.calificacion ? (
+                      <p style={{ color: "#d4af37", margin: 0 }}>
+                        Tu calificación: {p.calificacion} ⭐
+                      </p>
+                    ) : null}
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : (
+            /* --- VISTA REPARTIDOR --- */
+            <div
+              style={{
+                backgroundColor: "rgba(255, 255, 255, 0.95)",
+                padding: "25px",
+                borderRadius: "15px",
+                boxShadow: "0 8px 32px rgba(0,0,0,0.2)",
+              }}
+            >
+              <div
+                style={{
+                  backgroundColor: "#e9f7ef",
+                  padding: "15px",
+                  borderRadius: "12px",
+                  marginBottom: "20px",
+                  border: "1px solid #c3e6cb",
+                }}
+              >
+                <h3 style={{ marginTop: 0 }}>📦 Mis Entregas en Progreso</h3>
+                {pedidosActivos.length === 0 ? (
+                  <p>No tienes entregas activas.</p>
+                ) : (
+                  pedidosActivos.map((p) => (
+                    <div
+                      key={p.id}
                       style={{
-                        backgroundColor: "#dc3545",
-                        color: "white",
-                        padding: "8px",
+                        backgroundColor: "#fff",
+                        padding: "12px",
+                        borderRadius: "8px",
+                        marginBottom: "8px",
+                        border: "1px solid #28a745",
                       }}
                     >
-                      ✅ Marcar como Entregado
+                      <p style={{ margin: "0 0 10px 0" }}>
+                        <b>Ruta:</b> {p.origen} ➔ {p.destino}
+                      </p>
+                      <button
+                        onClick={() => finalizarEnvio(p.id)}
+                        style={{
+                          backgroundColor: "#dc3545",
+                          color: "white",
+                          padding: "8px 15px",
+                          border: "none",
+                          borderRadius: "5px",
+                          cursor: "pointer",
+                        }}
+                      >
+                        ✅ Marcar como Entregado
+                      </button>
+                    </div>
+                  ))
+                )}
+              </div>
+
+              <h3>🛒 Pedidos Disponibles</h3>
+              <button onClick={refrescarTodo} style={{ marginBottom: "15px" }}>
+                🔄 Actualizar Todo
+              </button>
+              <div style={{ display: "grid", gap: "10px" }}>
+                {pedidosDisponibles.map((p) => (
+                  <div
+                    key={p.id}
+                    style={{
+                      border: "1px solid #ccc",
+                      padding: "15px",
+                      borderRadius: "10px",
+                      backgroundColor: "#fff",
+                    }}
+                  >
+                    <p style={{ margin: "0 0 10px 0" }}>
+                      {p.origen} ➔ {p.destino} | <b>Q{p.tarifa}</b>
+                    </p>
+                    <button
+                      onClick={() => manejarAceptar(p.id)}
+                      style={{
+                        backgroundColor: "#007bff",
+                        color: "white",
+                        padding: "8px 15px",
+                        border: "none",
+                        borderRadius: "5px",
+                        cursor: "pointer",
+                      }}
+                    >
+                      Aceptar Pedido
                     </button>
                   </div>
-                ))
-              )}
-            </div>
+                ))}
+              </div>
 
-            {/* --- SECCIÓN 2: PEDIDOS DISPONIBLES (Épica C) --- */}
-            <h3>🛒 Pedidos Disponibles en la Zona</h3>
-            <button onClick={refrescarTodo}>🔄 Actualizar Todo</button>
-            {pedidosDisponibles.map((p) => (
               <div
-                key={p.id}
                 style={{
-                  border: "1px solid #ccc",
-                  padding: "10px",
-                  margin: "10px 0",
+                  marginTop: "30px",
+                  borderTop: "2px solid #eee",
+                  paddingTop: "20px",
                 }}
               >
-                <p>
-                  {p.origen} ➔ {p.destino} | <b>Q{p.tarifa}</b>
+                <h3>
+                  ⭐ Mi Reputación:{" "}
+                  <span style={{ color: "#d4af37" }}>
+                    {metricas.promedio} / 5
+                  </span>
+                </h3>
+                <p style={{ fontSize: "0.9rem", color: "#666" }}>
+                  Basado en {metricas.total_calificaciones} calificaciones
                 </p>
-                <button
-                  onClick={() => manejarAceptar(p.id)}
-                  style={{ backgroundColor: "#007bff", color: "white" }}
-                >
-                  Aceptar Pedido
-                </button>
+                <h4>Historial Reciente:</h4>
+                {metricas.historial.map((p) => (
+                  <div
+                    key={p.id}
+                    style={{
+                      fontSize: "14px",
+                      borderBottom: "1px solid #eee",
+                      padding: "8px 0",
+                    }}
+                  >
+                    <span>Destino: {p.destino}</span> |{" "}
+                    <b>{p.calificacion} ⭐</b>
+                  </div>
+                ))}
               </div>
-            ))}
-            <h3>⭐ Mi Reputación como Repartidor</h3>
-            <div style={{ display: "flex", gap: "20px", alignItems: "center" }}>
-              <div
-                style={{
-                  fontSize: "24px",
-                  fontWeight: "bold",
-                  color: "#d4af37",
-                }}
-              >
-                {metricas.promedio} / 5
-              </div>
-              <p>Basado en {metricas.total_calificaciones} calificaciones</p>
             </div>
-
-            <h4>Historial de Calificaciones Individuales:</h4>
-            {metricas.historial.length === 0 ? (
-              <p>Aún no tienes calificaciones registradas.</p>
-            ) : (
-              metricas.historial.map((p) => (
-                <div
-                  key={p.id}
-                  style={{
-                    fontSize: "14px",
-                    borderBottom: "1px solid #eee",
-                    padding: "5px 0",
-                  }}
-                >
-                  <span>Destino: {p.destino}</span> |{" "}
-                  <b>Calificación: {p.calificacion} ⭐</b>
-                </div>
-              ))
-            )}
-          </div>
-        )}
-      </main>
+          )}
+        </main>
+      </div>
     </div>
   );
 }
