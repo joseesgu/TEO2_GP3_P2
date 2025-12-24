@@ -21,6 +21,7 @@ class Usuario(BaseModel):
     nombre: str
     rol: str # "cliente" o "repartidor" [cite: 25]
     vehiculo: Optional[str] = None # Para el repartidor [cite: 26]
+    foto: Optional[str] = None # URL o base64 [cite: 27]
 
 class Pedido(BaseModel):
     id: int

@@ -15,7 +15,7 @@ function App() {
   const [datosEnvio, setDatosEnvio] = useState({
     origen: "",
     destino: "",
-    km: 0,
+    km: 0
   });
   const [misPedidos, setMisPedidos] = useState([]);
 
@@ -148,6 +148,18 @@ function App() {
     }
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        // Guardamos la cadena Base64 en el estado del formulario
+        setFormData({ ...formData, foto: reader.result });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const refrescarTodo = () => {
     cargarPedidos(); // Carga los "Disponibles"
     cargarTareasRepartidor(); // Carga los "En camino"
@@ -246,16 +258,38 @@ function App() {
               style={{ display: "flex", flexDirection: "column", gap: "12px" }}
             >
               {isRegister && (
-                <input
-                  type="text"
-                  placeholder="Nombre Completo"
-                  style={inputStyle}
-                  onChange={(e) =>
-                    setFormData({ ...formData, nombre: e.target.value })
-                  }
-                />
-              )}
+                <>
+                  <input
+                    type="text"
+                    placeholder="Nombre Completo"
+                    style={inputStyle}
+                    onChange={(e) =>
+                      setFormData({ ...formData, nombre: e.target.value })
+                    }
+                  />
 
+                  {/* Ahora este div SÓLO se verá en el Registro */}
+                  <div style={{ textAlign: "left", marginBottom: "5px" }}>
+                    <label
+                      style={{
+                        fontSize: "0.8rem",
+                        color: "#555",
+                        display: "block",
+                        marginBottom: "4px",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      Foto de Perfil:
+                    </label>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageChange}
+                      style={{ fontSize: "0.8rem", width: "100%" }}
+                    />
+                  </div>
+                </>
+              )}
               {isRegister && (
                 <select
                   style={inputStyle}
@@ -397,6 +431,29 @@ function App() {
               transition={{ type: "spring", damping: 30, stiffness: 400 }}
               rotationInterval={2000}
             />
+          </div>
+          <div
+            style={{
+              width: "50px",
+              height: "50px",
+              borderRadius: "50%",
+              overflow: "hidden",
+              border: "2px solid #007bff",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: "#eee",
+            }}
+          >
+            {user && user.foto ? (
+              <img
+                src={user.foto}
+                alt="Perfil"
+                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              />
+            ) : (
+              <span style={{ fontSize: "24px" }}>👤</span>
+            )}
           </div>
           <p style={{ margin: 0 }}>
             Usuario: <b>{user.nombre}</b> | Rol: <b>{user.rol}</b>
